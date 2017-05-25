@@ -1,2 +1,9 @@
 Images/
+NewsCentralizer/NewsCentralizer/NewsCentralizer/bin/
+NewsCentralizer/NewsCentralizer/NewsCentralizer/obj/
+NewsCentralizer/NewsCentralizer/NewsCentralizer.Android/bin/
+NewsCentralizer/NewsCentralizer/NewsCentralizer.Android/obj/
+NewsCentralizer/NewsCentralizer/NewsCentralizer.UWP/obj/
+NewsCentralizer/NewsCentralizer/NewsCentralizer.UWP/bin/
+NewsCentralizer/packages/
 *.psd
