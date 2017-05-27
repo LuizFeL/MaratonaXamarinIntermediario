@@ -1,19 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿using NewsCentralizer.View;
 using Xamarin.Forms;
 
 namespace NewsCentralizer
 {
     public partial class App : Application
     {
+        //public static User CurrentUser { get; set; }
+
+        public static void LoginAction()
+        {
+            
+        } 
+
         public App()
         {
             InitializeComponent();
-
-            MainPage = new NewsCentralizer.MainPage();
+            MainPage = new NavigationPage(new LoginPage());
         }
 
         protected override void OnStart()

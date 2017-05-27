@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="356ce7cd-61f3-4786-ab89-6820f0c0755c" Publisher="CN=LFSANTOS" Version="1.0.0.0" />
+  <Identity Name="FeL.NewsCentralizer.UWP" Publisher="CN=LFSANTOS" Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="356ce7cd-61f3-4786-ab89-6820f0c0755c" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>NewsCentralizer.UWP</DisplayName>
+    <DisplayName>FeL - News Centralizer</DisplayName>
     <PublisherDisplayName>LFSANTOS</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="FeL.NewsCentralizer.UWP">
-      <uap:VisualElements DisplayName="News Centralizer" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="News Centralizer UWP" BackgroundColor="transparent">
+      <uap:VisualElements DisplayName="FeL - News Centralizer" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="News Centralizer UWP by FeL IT Solutions" BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />

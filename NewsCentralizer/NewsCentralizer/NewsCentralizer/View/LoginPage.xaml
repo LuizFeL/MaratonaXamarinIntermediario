@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NewsCentralizer.View.LoginPage"
+             Title="FeL - News Centralizer"
+             xmlns:controls="clr-namespace:NewsCentralizer.Controls" >
+    <AbsoluteLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" BackgroundColor="White" >
+        <Image HorizontalOptions="Fill" VerticalOptions="Fill" Source="background.jpg" Aspect="AspectFill" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All" />
+
+        <StackLayout WidthRequest="400" Padding="15" Spacing="10" VerticalOptions="Start" HorizontalOptions="Center" AbsoluteLayout.LayoutBounds="0.5, 0, -1, -1" AbsoluteLayout.LayoutFlags="PositionProportional">
+            <Label Text="Centralizador de Notícias" FontAttributes="Bold" FontSize="Large" TextColor="CornflowerBlue" HorizontalTextAlignment="Center" />
+            <Label Text="Login:" FontAttributes="Bold" FontSize="Small" HorizontalTextAlignment="Center"/>
+            <Image BackgroundColor="CornflowerBlue" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
+            <controls:CustomListView ItemsSource="{Binding SocialLogins}" ItemTappedCommand="{Binding SocialLoginCommand}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" BackgroundColor="{Binding BackgroundColor}" Spacing="20" Padding="10" >
+                                <Image Source="{Binding Logo}" WidthRequest="60"  />
+                                <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="Large" TextColor="{Binding TextColor}" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center" VerticalOptions="FillAndExpand"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </controls:CustomListView>
+        </StackLayout>
+
+    </AbsoluteLayout>
+</ContentPage>
