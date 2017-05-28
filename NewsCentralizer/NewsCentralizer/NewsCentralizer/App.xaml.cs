@@ -1,21 +1,17 @@
-﻿using NewsCentralizer.View;
+﻿using NewsCentralizer.Model;
+using NewsCentralizer.View;
 using Xamarin.Forms;
 
 namespace NewsCentralizer
 {
     public partial class App : Application
     {
-        //public static User CurrentUser { get; set; }
-
-        public static void LoginAction()
-        {
-            
-        } 
+        public static UserModel CurrentUser { get; set; }
 
         public App()
         {
             InitializeComponent();
-            MainPage = new NavigationPage(new LoginPage());
+            MainPage = new NavigationPage(new SocialLoginView());
         }
 
         protected override void OnStart()

@@ -2,13 +2,18 @@
 using System.Collections.ObjectModel;
 using NewsCentralizer.Model;
 using Xamarin.Forms;
+using NewsCentralizer.Services;
 
 namespace NewsCentralizer.ViewModel
 {
-    public class SocialLoginViewModel
+    public class SocialLoginViewModel : BaseViewModel
     {
-        public SocialLoginViewModel()
+        private readonly IFelApiService _service;
+
+        public SocialLoginViewModel(IFelApiService service)
         {
+            _service = service;
+            Title = "Centralizador de notícias";
             var loginsTypeList = new List<SocialLoginModel>
             {
                 new SocialLoginModel
