@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace NewsCentralizer.Controls
@@ -14,9 +9,13 @@ namespace NewsCentralizer.Controls
             BindableProperty.Create(
                 "ItemTappedCommand",
                 typeof(ICommand),
-                typeof(CustomListView));
+                typeof(CustomListView), null);
 
-        public ICommand ItemTappedCommand { get; set; }
+        public ICommand ItemTappedCommand
+        {
+            get { return (ICommand)GetValue(ItemTappedCommandProperty); }
+            set { SetValue(ItemTappedCommandProperty, value); }
+        }
 
         public CustomListView(ListViewCachingStrategy strategy) : base(strategy)
         {

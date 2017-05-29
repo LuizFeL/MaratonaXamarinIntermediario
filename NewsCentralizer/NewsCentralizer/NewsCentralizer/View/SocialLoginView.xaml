@@ -7,16 +7,14 @@
     <AbsoluteLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" BackgroundColor="White" >
         <Image HorizontalOptions="Fill" VerticalOptions="Fill" Source="background.jpg" Aspect="AspectFill" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All" />
 
-        <StackLayout WidthRequest="400" Padding="15" Spacing="10" VerticalOptions="Start" HorizontalOptions="Center" AbsoluteLayout.LayoutBounds="0.5, 0, -1, -1" AbsoluteLayout.LayoutFlags="PositionProportional">
-            <Label Text="Centralizador de Notícias" FontAttributes="Bold" FontSize="Large" TextColor="CornflowerBlue" HorizontalTextAlignment="Center" />
+        <StackLayout Padding="15" Spacing="10" VerticalOptions="FillAndExpand" HorizontalOptions="Center" AbsoluteLayout.LayoutBounds="0.5, 0, -1, -1" AbsoluteLayout.LayoutFlags="PositionProportional">
             <Label Text="Login:" FontAttributes="Bold" FontSize="Small" HorizontalTextAlignment="Center"/>
-            <Image BackgroundColor="CornflowerBlue" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
-            <controls:CustomListView ItemsSource="{Binding SocialLogins}" ItemTappedCommand="{Binding SocialLoginCommand}">
+            <controls:CustomListView ItemsSource="{Binding SocialLogins}" ItemTappedCommand="{Binding SocialLoginCommand}" HasUnevenRows="True" SeparatorVisibility="None" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" BackgroundColor="{Binding BackgroundColor}" Spacing="20" Padding="10" >
-                                <Image Source="{Binding Logo}" WidthRequest="60"  />
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" BackgroundColor="{Binding BackgroundColor}" Spacing="20" Padding="10" Margin="25,5">
+                                <Image Source="{Binding Logo}" WidthRequest="50"  />
                                 <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="Large" TextColor="{Binding TextColor}" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center" VerticalOptions="FillAndExpand"/>
                             </StackLayout>
                         </ViewCell>

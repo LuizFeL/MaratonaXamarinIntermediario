@@ -1,9 +1,39 @@
-﻿namespace NewsCentralizer.Model
+﻿using Microsoft.WindowsAzure.MobileServices;
+using Newtonsoft.Json;
+using SQLite;
+
+namespace NewsCentralizer.Model
 {
-    public class NewsModel
+    [DataTable("News")]
+    public class NewsModel : ObservableBaseObject, IKeyObject
     {
-        public string Id { get; set; }
-        public string Title { get; set; }
-        public string Url { get; set; }
+        private string _id;
+        private string _url;
+        private string _title;
+
+        [PrimaryKey]
+        [JsonProperty("Id")]
+        public string Id
+        {
+            get { return _id; }
+            set { _id = value; OnPropertyChanged(); }
+        }
+
+        [JsonProperty("Title")]
+        public string Title
+        {
+            get { return _title; }
+            set { _title = value; OnPropertyChanged(); }
+        }
+
+        [JsonProperty("Url")]
+        public string Url
+        {
+            get { return _url; }
+            set { _url = value; OnPropertyChanged(); }
+        }
+
+        [Version]
+        public string Version { get; set; }
     }
 }

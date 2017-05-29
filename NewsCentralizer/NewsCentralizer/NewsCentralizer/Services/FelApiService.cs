@@ -12,7 +12,7 @@ namespace NewsCentralizer.Services
 {
     public class FelApiService : IFelApiService
     {
-        private const string BaseUrl = "https://monkey-hub-api.azurewebsites.net/api/";
+        private const string BaseUrl = "https://maratonaxamarinfel.azurewebsites.net/api/";
 
         public async Task<List<NewsModel>> GetTopNewsAsync()
         {

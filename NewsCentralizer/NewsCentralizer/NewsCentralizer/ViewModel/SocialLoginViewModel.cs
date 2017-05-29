@@ -50,8 +50,16 @@ namespace NewsCentralizer.ViewModel
                 }
             };
             SocialLogins = new ObservableCollection<SocialLoginModel>(loginsTypeList);
+            SocialLoginCommand = new Command<SocialLoginModel>(ExecuteSocialLoginCommand);
         }
 
         public ObservableCollection<SocialLoginModel> SocialLogins { get; set; }
+
+        public Command<SocialLoginModel> SocialLoginCommand { get; }
+
+        private async void ExecuteSocialLoginCommand(SocialLoginModel socialLogin)
+        {
+            await DisplayAlert("Teste", socialLogin.Name, "OK");
+        }
     }
 }

@@ -43,7 +43,7 @@ namespace NewsCentralizer.ViewModel
             var viewModelType = typeof(TViewModel);
             var viewModelTypeName = viewModelType.Name;
             var viewModelWordLength = "ViewModel".Length;
-            var viewTypeName = $"NewsCentralizer.{viewModelTypeName.Substring(0, viewModelTypeName.Length - viewModelWordLength)}View";
+            var viewTypeName = "NewsCentralizer.View." + viewModelTypeName.Substring(0, viewModelTypeName.Length - viewModelWordLength) + "View";
             var viewType = Type.GetType(viewTypeName);
 
             var page = Activator.CreateInstance(viewType) as Page;
