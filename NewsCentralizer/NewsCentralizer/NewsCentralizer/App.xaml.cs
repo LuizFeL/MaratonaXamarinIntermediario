@@ -1,5 +1,7 @@
 ﻿using System;
+using NewsCentralizer.Helpers;
 using NewsCentralizer.Model;
+using NewsCentralizer.Services;
 using NewsCentralizer.View;
 using Xamarin.Forms;
 
@@ -8,13 +10,18 @@ namespace NewsCentralizer
     public partial class App : Application
     {
         public static UserInfoModel UserInfo { get; set; }
+        public static AzureClient AzureClient { get; private set; }
 
         public App()
         {
             try
             {
                 InitializeComponent();
-                MainPage = new NavigationPage(new SocialLoginView());
+                AzureClient = new AzureClient();
+                var page = AzureClient.TryLogin() ? (Page)new TopNewsView() : new SocialLoginView(AzureClient);
+
+
+                MainPage = new NavigationPage(page);
             }
             catch (Exception ex)
             {

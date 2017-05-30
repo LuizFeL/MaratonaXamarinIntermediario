@@ -57,11 +57,10 @@ namespace NewsCentralizer.ViewModel
 
             var page = Activator.CreateInstance(viewType) as Page;
 
-            if (viewModelType.GetTypeInfo().DeclaredConstructors.Any(c => c.GetParameters().Any(p => p.ParameterType == typeof(IFelApiService))))
+            if (viewModelType.GetTypeInfo().DeclaredConstructors.Any(c => c.GetParameters().Any(p => p.ParameterType == typeof(AzureClient))))
             {
                 var argsList = args.ToList();
-                var service = DependencyService.Get<IFelApiService>();
-                argsList.Insert(0, service);
+                argsList.Insert(0, App.AzureClient);
                 args = argsList.ToArray();
             }
 
