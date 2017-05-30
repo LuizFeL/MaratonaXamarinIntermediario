@@ -74,7 +74,7 @@ namespace NewsCentralizer.ViewModel
                 IsBusy = true;
                 await Task.Delay(100).ConfigureAwait(true);
 
-                //TODO: Go to News
+                await PushAsync<NewsViewModel>(news);
             }
             catch (Exception ex)
             {
@@ -85,8 +85,7 @@ namespace NewsCentralizer.ViewModel
                 IsBusy = false;
             }
         }
-
-
+        
         public Command FavoriteCommand { get; }
 
         private async void ExecuteFavoriteCommand()

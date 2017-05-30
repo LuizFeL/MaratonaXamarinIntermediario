@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.MobileServices;
 using Microsoft.WindowsAzure.MobileServices.SQLiteStore;
@@ -27,14 +25,12 @@ namespace NewsCentralizer.Services
         {
             Client = new MobileServiceClient(ServiceUri);
             Store = new MobileServiceSQLiteStore(DbPath);
+            Store.DefineTable<CategoryModel>();
+            Store.DefineTable<FavoriteModel>();
+            Store.DefineTable<NewsModel>();
+            Store.DefineTable<PreferenceModel>();
             Client.SyncContext.InitializeAsync(Store);
             TryLogin();
-        }
-
-        private IMobileServiceSyncTable<T> InitializeTable<T>() where T : IKeyObject, new()
-        {
-            Store.DefineTable<T>();
-            return Client.GetSyncTable<T>();
         }
 
         public string GetName<T>() where T : IKeyObject, new()
@@ -88,7 +84,7 @@ namespace NewsCentralizer.Services
                 if (Plugin.Connectivity.CrossConnectivity.Current.IsConnected)
                     await SyncAsync<T>();
 
-                var table = InitializeTable<T>();
+                var table = Client.GetSyncTable<T>();
                 return await table.ToEnumerableAsync();
             }
             catch (Exception)
@@ -101,8 +97,22 @@ namespace NewsCentralizer.Services
         {
             try
             {
-                var table = InitializeTable<T>();
+                var table = Client.GetSyncTable<T>();
                 var queryResult = await table.Where(x => x.Id == key).ToListAsync();
+                return queryResult.FirstOrDefault();
+            }
+            catch (Exception)
+            {
+                return new T();
+            }
+        }
+
+        public async Task<T> Get<T>(Expression<Func<T, bool>> where) where T : IKeyObject, new()
+        {
+            try
+            {
+                var table = Client.GetSyncTable<T>();
+                var queryResult = await table.Where(where).ToListAsync();
                 return queryResult.FirstOrDefault();
             }
             catch (Exception)
@@ -113,7 +123,7 @@ namespace NewsCentralizer.Services
 
         public async void Save<T>(T data) where T : IKeyObject, new()
         {
-            var table = InitializeTable<T>();
+            var table = Client.GetSyncTable<T>();
 
             if (await Get<T>(data.Id) == null)
             {
@@ -128,7 +138,7 @@ namespace NewsCentralizer.Services
         {
             try
             {
-                var table = InitializeTable<T>();
+                var table = Client.GetSyncTable<T>();
                 await Client.SyncContext.PushAsync();
                 await table.PullAsync(GetName<T>(), table.CreateQuery());
             }
@@ -140,13 +150,13 @@ namespace NewsCentralizer.Services
 
         public async Task CleanData<T>() where T : IKeyObject, new()
         {
-            var table = InitializeTable<T>();
+            var table = Client.GetSyncTable<T>();
             await table.PurgeAsync(GetName<T>(), table.CreateQuery(), new System.Threading.CancellationToken());
         }
 
         public async void Delete<T>(T data) where T : IKeyObject, new()
         {
-            var table = InitializeTable<T>();
+            var table = Client.GetSyncTable<T>();
             if (await Get<T>(data.Id) == null) return;
             await table.DeleteAsync(data);
         }
