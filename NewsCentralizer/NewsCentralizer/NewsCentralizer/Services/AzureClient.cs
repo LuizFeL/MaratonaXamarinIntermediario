@@ -6,19 +6,22 @@ using System.Threading.Tasks;
 using Microsoft.WindowsAzure.MobileServices;
 using Microsoft.WindowsAzure.MobileServices.SQLiteStore;
 using Microsoft.WindowsAzure.MobileServices.Sync;
+using NewsCentralizer.Authentication;
+using NewsCentralizer.Helpers;
 using NewsCentralizer.Model;
+using Xamarin.Forms;
 
 namespace NewsCentralizer.Services
 {
-    public abstract class AzureDbClient<T> where T : IKeyObject, new()
+    public class AzureClient<T> where T : IKeyObject, new()
     {
-        protected readonly IMobileServiceClient Client;
+        protected readonly MobileServiceClient Client;
         const string DbPath = "data.db";
-        private const string ServiceUri = "http://maratonaxamarinfel.azurewebsites.net/";
+        private const string ServiceUri = "https://maratonaxamarinfel.azurewebsites.net/";
         protected readonly IMobileServiceSyncTable<T> Table;
         protected readonly string Name;
 
-        protected AzureDbClient()
+        public AzureClient()
         {
             Client = new MobileServiceClient(ServiceUri);
             var store = new MobileServiceSQLiteStore(DbPath);
@@ -29,15 +32,39 @@ namespace NewsCentralizer.Services
 
             Client.SyncContext.InitializeAsync(store);
             Table = Client.GetSyncTable<T>();
+
+            TryLogin();
         }
 
-        public async Task<IEnumerable<T>> GetUsers()
+        private bool TryLogin()
+        {
+            if (string.IsNullOrWhiteSpace(Settings.AuthToken) || string.IsNullOrWhiteSpace(Settings.UserId)) return false;
+            Client.CurrentUser = new MobileServiceUser(Settings.UserId)
+            {
+                MobileServiceAuthenticationToken = Settings.AuthToken
+            };
+            return true;
+        }
+
+        public async Task<bool> LoginAsync(SocialLoginModel model)
+        {
+            if (TryLogin()) return true;
+            if (model == null) return false;
+            var user = await DependencyService.Get<IAuthentication>().LoginAsync(Client, model.Provider);
+
+            Settings.AuthToken = user?.MobileServiceAuthenticationToken;
+            Settings.UserId = user?.UserId;
+
+            return Settings.IsLoggedIn;
+        }
+
+        public async Task<IEnumerable<T>> GetAll()
         {
             var empty = new T[0];
             try
             {
                 if (Plugin.Connectivity.CrossConnectivity.Current.IsConnected)
-                    await SyncUsersAsync();
+                    await SyncAsync();
 
                 return await Table.ToEnumerableAsync();
             }
@@ -47,8 +74,7 @@ namespace NewsCentralizer.Services
             }
         }
 
-
-        public async Task<T> GetUser(string key)
+        public async Task<T> Get(string key)
         {
             try
             {
@@ -65,7 +91,7 @@ namespace NewsCentralizer.Services
         {
             var table = Table;
 
-            if (await GetUser(data.Id) == null)
+            if (await Get(data.Id) == null)
             {
                 await table.InsertAsync(data);
                 return;
@@ -74,7 +100,7 @@ namespace NewsCentralizer.Services
             await table.UpdateAsync(data);
         }
 
-        public async Task SyncUsersAsync()
+        public async Task SyncAsync()
         {
             ReadOnlyCollection<MobileServiceTableOperationError> syncErrors = null;
             try
@@ -92,18 +118,15 @@ namespace NewsCentralizer.Services
             }
         }
 
-
-        public async Task CleanUserData()
+        public async Task CleanData()
         {
             await Table.PurgeAsync(Name, Table.CreateQuery(), new System.Threading.CancellationToken());
         }
 
-
-
         public async void Delete(T data)
         {
             var table = Table;
-            if (await GetUser(data.Id) == null) return;
+            if (await Get(data.Id) == null) return;
             await table.DeleteAsync(data);
         }
     }

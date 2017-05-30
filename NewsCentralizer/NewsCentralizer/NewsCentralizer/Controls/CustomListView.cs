@@ -33,6 +33,7 @@ namespace NewsCentralizer.Controls
             {
                 if (ItemTappedCommand == null) return;
                 if (ItemTappedCommand.CanExecute(e.SelectedItem)) ItemTappedCommand.Execute(e.SelectedItem);
+                SelectedItem = null;
             };
         }
     }

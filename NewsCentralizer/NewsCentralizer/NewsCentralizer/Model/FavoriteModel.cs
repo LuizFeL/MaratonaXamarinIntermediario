@@ -25,10 +25,7 @@ namespace NewsCentralizer.Model
             get { return _userId; }
             set { _userId = value; OnPropertyChanged(); }
         }
-
-        [JsonIgnore]
-        public UserModel User { get; set; }
-
+        
         [JsonProperty("NewsId")]
         public string NewsId
         {

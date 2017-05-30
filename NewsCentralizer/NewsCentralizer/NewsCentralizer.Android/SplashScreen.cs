@@ -1,3 +1,4 @@
+using System;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
@@ -10,11 +11,18 @@ namespace NewsCentralizer.Droid
     {
         protected override void OnCreate(Bundle bundle)
         {
-            base.OnCreate(bundle);
+            try
+            {
+                base.OnCreate(bundle);
 
-            var intent = new Intent(this, typeof(MainActivity));
-            StartActivity(intent);
-            Finish();
+                var intent = new Intent(this, typeof(MainActivity));
+                StartActivity(intent);
+                Finish();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
         }
     }
 }

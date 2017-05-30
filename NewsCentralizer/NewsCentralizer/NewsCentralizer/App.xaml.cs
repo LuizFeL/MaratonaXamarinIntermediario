@@ -1,4 +1,5 @@
-﻿using NewsCentralizer.Model;
+﻿using System;
+using NewsCentralizer.Model;
 using NewsCentralizer.View;
 using Xamarin.Forms;
 
@@ -6,12 +7,19 @@ namespace NewsCentralizer
 {
     public partial class App : Application
     {
-        public static UserModel CurrentUser { get; set; }
+        public static UserInfoModel UserInfo { get; set; }
 
         public App()
         {
-            InitializeComponent();
-            MainPage = new NavigationPage(new SocialLoginView());
+            try
+            {
+                InitializeComponent();
+                MainPage = new NavigationPage(new SocialLoginView());
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
         }
 
         protected override void OnStart()

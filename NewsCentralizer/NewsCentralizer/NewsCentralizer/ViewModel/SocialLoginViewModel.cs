@@ -1,11 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using Microsoft.WindowsAzure.MobileServices;
+using NewsCentralizer.Helpers;
 using NewsCentralizer.Model;
 using Xamarin.Forms;
 using NewsCentralizer.Services;
+using Newtonsoft.Json.Linq;
 
 namespace NewsCentralizer.ViewModel
 {
+
     public class SocialLoginViewModel : BaseViewModel
     {
         private readonly IFelApiService _service;
@@ -14,6 +22,7 @@ namespace NewsCentralizer.ViewModel
         {
             _service = service;
             Title = "Centralizador de notícias";
+            UserInfo = new UserInfoModel { Id = "0", ImageUri = "usericon.png", Name = "Fazer Login" };
             var loginsTypeList = new List<SocialLoginModel>
             {
                 new SocialLoginModel
@@ -22,15 +31,15 @@ namespace NewsCentralizer.ViewModel
                     TextColor = Color.White,
                     Name = "Google +",
                     Logo = "google.png",
-                    Type = SocialLoginType.Google
+                    Provider = MobileServiceAuthenticationProvider.Google
                 },
                 new SocialLoginModel
                 {
                     BackgroundColor = Color.FromHex("#daf5fd"),
                     TextColor = Color.FromHex("#0078ff"),
-                    Name = "Windows",
+                    Name = "Microsoft Account",
                     Logo = "windows.png",
-                    Type = SocialLoginType.Windows
+                    Provider = MobileServiceAuthenticationProvider.MicrosoftAccount
                 },
                 new SocialLoginModel
                 {
@@ -38,7 +47,7 @@ namespace NewsCentralizer.ViewModel
                     TextColor = Color.White,
                     Name = "Facebook",
                     Logo = "facebook.png",
-                    Type = SocialLoginType.Facebook
+                    Provider = MobileServiceAuthenticationProvider.Facebook
                 },
                 new SocialLoginModel
                 {
@@ -46,7 +55,7 @@ namespace NewsCentralizer.ViewModel
                     TextColor = Color.White,
                     Name = "Twitter",
                     Logo = "twitter.png",
-                    Type = SocialLoginType.Twitter
+                    Provider = MobileServiceAuthenticationProvider.Twitter
                 }
             };
             SocialLogins = new ObservableCollection<SocialLoginModel>(loginsTypeList);
@@ -55,11 +64,64 @@ namespace NewsCentralizer.ViewModel
 
         public ObservableCollection<SocialLoginModel> SocialLogins { get; set; }
 
+        private UserInfoModel _userInfo;
+        public UserInfoModel UserInfo
+        {
+            get { return _userInfo; }
+            set { SetProperty(ref _userInfo, value); }
+        }
+
         public Command<SocialLoginModel> SocialLoginCommand { get; }
+
+        private async Task SetUserAvatar(SocialLoginModel socialLogin)
+        {
+            try
+            {
+                //TODO: Get user info
+                UserInfo = new UserInfoModel { Id = "0", ImageUri = "usericon.png", Name = "Fazer Login" };
+            }
+            catch (Exception ex)
+            {
+                UserInfo = new UserInfoModel { Id = "0", ImageUri = "usericon.png", Name = "Fazer Login" };
+                await DisplayAlert("Erro Avatar", ex.Message, "OK");
+            }
+            App.UserInfo = UserInfo;
+        }
 
         private async void ExecuteSocialLoginCommand(SocialLoginModel socialLogin)
         {
-            await DisplayAlert("Teste", socialLogin.Name, "OK");
+            try
+            {
+                IsBusy = true;
+                await Task.Delay(100).ConfigureAwait(true);
+                if (socialLogin == null) return;
+                var logged = await new AzureClient<UserInfoModel>().LoginAsync(socialLogin);
+                if (!logged)
+                {
+                    await DisplayAlert("Erro", "Não foi possível fazer login com " + socialLogin.Name, "OK");
+                    return;
+                }
+                await Task.Run(() => SetUserAvatar(socialLogin));
+                await DisplayAlert("Certo", "foi com " + socialLogin.Name, "OK");
+
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", ex.Message, "OK");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
+
+        public void ClearLoggedUser()
+        {
+            Settings.UserId = null;
+            Settings.AuthToken = null;
+            App.UserInfo = null;
+            UserInfo = null;
+        }
+
     }
 }

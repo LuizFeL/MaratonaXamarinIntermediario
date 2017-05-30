@@ -19,6 +19,15 @@ namespace NewsCentralizer.ViewModel
             set { SetProperty(ref _title, value); }
         }
 
+        private bool _isBusy;
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            set { SetProperty(ref _isBusy, value); }
+        }
+
+        public bool IsNotBusy => !IsBusy;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

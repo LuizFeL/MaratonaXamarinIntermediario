@@ -7,8 +7,8 @@ namespace NewsCentralizer.Model
     [DataTable("Category")]
     public class CategoryModel : ObservableBaseObject, IKeyObject
     {
-        private string _id;
         private string _name;
+        private string _id;
 
         [PrimaryKey]
         [JsonProperty("Id")]
