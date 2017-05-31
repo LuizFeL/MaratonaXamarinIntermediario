@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.WindowsAzure.MobileServices;
 using NewsCentralizer.Authentication;
 using NewsCentralizer.UWP.Authentication;
-using NewsCentralizer.Helpers;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(SocialAuthentication))]

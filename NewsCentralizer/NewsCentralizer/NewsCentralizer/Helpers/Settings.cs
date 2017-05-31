@@ -15,7 +15,7 @@ namespace NewsCentralizer.Helpers
         private static readonly string AuthTokenDefault = string.Empty;
 
         private const string LoginProviderKey = "loginprovider_key";
-        private const MobileServiceAuthenticationProvider LoginProviderDefault = MobileServiceAuthenticationProvider.MicrosoftAccount;
+        private const int LoginProviderDefault = (int)MobileServiceAuthenticationProvider.MicrosoftAccount;
 
 
         public static string AuthToken
@@ -24,7 +24,7 @@ namespace NewsCentralizer.Helpers
             set { AppSettings.AddOrUpdateValue(AuthTokenKey, value); }
         }
 
-        public static MobileServiceAuthenticationProvider LoginProvider
+        public static int LoginProvider
         {
             get { return AppSettings.GetValueOrDefault(LoginProviderKey, LoginProviderDefault); }
             set { AppSettings.AddOrUpdateValue(AuthTokenKey, value); }

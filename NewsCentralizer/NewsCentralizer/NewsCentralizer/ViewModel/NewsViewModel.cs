@@ -20,7 +20,7 @@ namespace NewsCentralizer.ViewModel
         public bool IsFavorite
         {
             get { return _isFavorite; }
-            set { SetProperty(ref _isFavorite, value); OnPropertyChanged(propertyName: "FavoriteIcon"); }
+            set { SetProperty(ref _isFavorite, value); OnPropertyChanged(nameof(FavoriteIcon)); }
         }
 
         public string FavoriteIcon => IsFavorite ? "favorite.png" : "nofavorite.png";

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure.MobileServices;
-using NewsCentralizer.Helpers;
 using NewsCentralizer.Model;
 using Xamarin.Forms;
 using NewsCentralizer.Services;
@@ -20,8 +17,8 @@ namespace NewsCentralizer.ViewModel
         public TopNewsViewModel(AzureClient client)
         {
             _client = client;
-            Title = "Top News";            
-                        
+            Title = "Top News";
+
             GoToNewsCommand = new Command<NewsModel>(ExecuteGoToNewsCommand);
             LoadNewsCommand = new Command(ExecuteLoadNewsCommand);
             FavoriteCommand = new Command(ExecuteFavoriteCommand);
@@ -85,7 +82,7 @@ namespace NewsCentralizer.ViewModel
                 IsBusy = false;
             }
         }
-        
+
         public Command FavoriteCommand { get; }
 
         private async void ExecuteFavoriteCommand()
@@ -107,7 +104,7 @@ namespace NewsCentralizer.ViewModel
                 IsBusy = false;
             }
         }
-        
+
     }
 
     public class ListZebraColorConverter : IValueConverter

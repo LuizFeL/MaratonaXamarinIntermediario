@@ -20,7 +20,6 @@ namespace NewsCentralizer
                 AzureClient = new AzureClient();
                 var page = AzureClient.TryLogin() ? (Page)new TopNewsView() : new SocialLoginView(AzureClient);
 
-
                 MainPage = new NavigationPage(page);
             }
             catch (Exception ex)

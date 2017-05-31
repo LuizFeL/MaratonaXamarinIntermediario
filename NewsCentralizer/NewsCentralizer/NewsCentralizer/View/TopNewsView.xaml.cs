@@ -17,7 +17,7 @@ namespace NewsCentralizer.View
             {
                 InitializeComponent();
                 BindingContext = BindingContext ?? new TopNewsViewModel(App.AzureClient);
-                var toolBarItem = new ToolbarItem("Fazer Login", "", () => { }, ToolbarItemOrder.Primary);
+                var toolBarItem = new ToolbarItem("Fazer Login", "", () => { ViewModel.LogoutCommand.Execute(null); }, ToolbarItemOrder.Primary);
                 toolBarItem.SetBinding(MenuItem.IconProperty, new Binding("UserInfo.ImageUri", BindingMode.OneWay));
                 toolBarItem.SetBinding(MenuItem.TextProperty, new Binding("UserInfo.Name", BindingMode.OneWay));
                 ToolbarItems.Add(toolBarItem);

@@ -5,13 +5,50 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using NewsCentralizer.Helpers;
 using Xamarin.Forms;
 using NewsCentralizer.Services;
+using NewsCentralizer.View;
 
 namespace NewsCentralizer.ViewModel
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
+        public BaseViewModel()
+        {
+
+            LogoutCommand = new Command(ExecuteLogoutCommand);
+        }
+
+        public Command LogoutCommand { get; }
+
+        private async void ExecuteLogoutCommand()
+        {
+            try
+            {
+                IsBusy = true;
+                await Task.Delay(100).ConfigureAwait(true);
+                if (Settings.IsLoggedIn)
+                {
+                    var confirmLogout = await DisplayAlert("Logout", "Deseja realmente sair?", "Sim", "Não");
+                    if (!confirmLogout) return;
+                    await App.AzureClient.LogoutAsync();
+                    await LogoutNavigationAsync();
+                    return;
+                }
+
+                await PushModalAsync<SocialLoginViewModel>();
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro ao sair", ex.Message, "OK");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
         private string _title;
         public string Title
         {
@@ -47,7 +84,7 @@ namespace NewsCentralizer.ViewModel
             return true;
         }
 
-        public async Task PushAsync<TViewModel>(params object[] args) where TViewModel : BaseViewModel
+        public Page GetPage<TViewModel>(params object[] args) where TViewModel : BaseViewModel
         {
             var viewModelType = typeof(TViewModel);
             var viewModelTypeName = viewModelType.Name;
@@ -70,7 +107,23 @@ namespace NewsCentralizer.ViewModel
                 page.BindingContext = viewModel;
             }
 
-            await Application.Current.MainPage.Navigation.PushAsync(page);
+            return page;
+        }
+
+        public async Task PushAsync<TViewModel>(params object[] args) where TViewModel : BaseViewModel
+        {
+            await Application.Current.MainPage.Navigation.PushAsync(GetPage<TViewModel>());
+        }
+
+        public async Task PushModalAsync<TViewModel>(params object[] args) where TViewModel : BaseViewModel
+        {
+            await Application.Current.MainPage.Navigation.PushModalAsync(GetPage<TViewModel>());
+        }
+
+        public async Task LogoutNavigationAsync(params object[] args)
+        {
+            await Task.Delay(10).ConfigureAwait(true);
+            Application.Current.MainPage = new NavigationPage(new SocialLoginView(App.AzureClient));
         }
 
         public virtual Task LoadAsync()
@@ -83,9 +136,9 @@ namespace NewsCentralizer.ViewModel
             await Application.Current.MainPage.DisplayAlert(title, message, cancel);
         }
 
-        public async Task DisplayAlert(string title, string message, string accept, string cancel)
+        public async Task<bool> DisplayAlert(string title, string message, string accept, string cancel)
         {
-            await Application.Current.MainPage.DisplayAlert(title, message, accept, cancel);
+            return await Application.Current.MainPage.DisplayAlert(title, message, accept, cancel);
         }
     }
 }

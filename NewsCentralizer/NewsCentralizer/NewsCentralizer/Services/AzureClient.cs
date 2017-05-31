@@ -5,11 +5,9 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.MobileServices;
 using Microsoft.WindowsAzure.MobileServices.SQLiteStore;
-using Microsoft.WindowsAzure.MobileServices.Sync;
 using NewsCentralizer.Authentication;
 using NewsCentralizer.Helpers;
 using NewsCentralizer.Model;
-using Newtonsoft.Json;
 using Xamarin.Forms;
 
 namespace NewsCentralizer.Services
@@ -45,7 +43,7 @@ namespace NewsCentralizer.Services
             {
                 MobileServiceAuthenticationToken = Settings.AuthToken
             };
-            Task.Run(() => SetUserAvatar(Settings.LoginProvider));
+            Task.Run(() => SetUserAvatar((MobileServiceAuthenticationProvider)Settings.LoginProvider));
             return true;
         }
 
@@ -57,10 +55,18 @@ namespace NewsCentralizer.Services
 
             Settings.AuthToken = user?.MobileServiceAuthenticationToken;
             Settings.UserId = user?.UserId;
-            Settings.LoginProvider = model.Provider;
+            Settings.LoginProvider = (int)model.Provider;
             await SetUserAvatar(model.Provider);
 
             return Settings.IsLoggedIn;
+        }
+
+        public async Task LogoutAsync()
+        {
+            await Client.LogoutAsync();
+            Settings.AuthToken = null;
+            Settings.UserId = null;
+            App.UserInfo = new UserInfoModel { Id = "0", ImageUri = "", Name = "Fazer Login" };
         }
 
         private async Task SetUserAvatar(MobileServiceAuthenticationProvider provider)
@@ -70,7 +76,7 @@ namespace NewsCentralizer.Services
                 //TODO: Get user info
                 App.UserInfo = new UserInfoModel { Id = "0", ImageUri = "usericon.png", Name = "Logedin with " + provider };
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 App.UserInfo = new UserInfoModel { Id = "0", ImageUri = "", Name = "Fazer Login" };
             }
