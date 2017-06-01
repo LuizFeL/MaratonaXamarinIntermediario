@@ -1,17 +1,10 @@
 ﻿namespace NewsCentralizer.Model
 {
-    public class UserInfoModel : ObservableBaseObject, IKeyObject
+    public class UserInfoModel : BaseModel
     {
-        private string _id;
         private string _name;
         private string _imageUri;
-
-        public string Id
-        {
-            get { return _id; }
-            set { _id = value; OnPropertyChanged(); }
-        }
-
+        
         public string Name
         {
             get { return _name; }

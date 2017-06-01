@@ -112,6 +112,7 @@
     <Content Include="background.jpg" />
     <Content Include="facebook.png" />
     <Content Include="favorite.png" />
+    <Content Include="favoriteGeral.png" />
     <Content Include="google.png" />
     <Content Include="LogoMarcaLetraBranca.png" />
     <Content Include="Properties\Default.rd.xml" />
@@ -149,6 +150,7 @@
     <Content Include="nofavorite.png" />
     <Content Include="twitter.png" />
     <Content Include="usericon.png" />
+    <Content Include="favorite_settings.png" />
     <Content Include="windows.png" />
   </ItemGroup>
   <ItemGroup>

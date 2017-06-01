@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NewsCentralizer.View.FavoriteView"
+             Title="Favoritos"
+             xmlns:viewModel="clr-namespace:NewsCentralizer.ViewModel;assembly=NewsCentralizer"
+             xmlns:controls="clr-namespace:NewsCentralizer.Controls;assembly=NewsCentralizer"
+             x:Name="FavoriteListPage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <viewModel:ListZebraColorConverter  x:Key="MyColorConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <AbsoluteLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" >
+        <Image HorizontalOptions="Fill" VerticalOptions="Fill" Source="background.jpg" Aspect="AspectFill" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All" />
+
+        <StackLayout Padding="15" Spacing="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+            <controls:CustomListView x:Name="FavoritesListView" ItemsSource="{Binding Favorites}" RefreshCommand="{Binding LoadFavoritesCommand}" HasUnevenRows="True" SeparatorVisibility="None" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsBusy}">
+                <ListView.ItemTemplate >
+                    <DataTemplate >
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" BackgroundColor="{Binding Index, Converter={StaticResource MyColorConverter}}" Spacing="5" Padding="5" Margin="0">
+                                <StackLayout Spacing="1" Padding="0" Margin="0" VerticalOptions="FillAndExpand">
+                                    <Button Text="Excluir" WidthRequest="80" VerticalOptions="Center" Command="{Binding Path=BindingContext. DeleteFavoriteCommand, Source={x:Reference Name=FavoriteListPage}}" CommandParameter="{Binding Id}" BackgroundColor="Brown" TextColor="White" FontSize="Micro" />
+                                    <Button Text="Abrir" WidthRequest="80" VerticalOptions="Center" Command="{Binding Path=BindingContext. GoToNewsCommand, Source={x:Reference Name=FavoriteListPage}}" CommandParameter="{Binding Id}" BackgroundColor="DodgerBlue" TextColor="White" FontSize="Micro" />
+                                </StackLayout>
+                                <Image Source="{Binding News.ImageUrl}" WidthRequest="50" HeightRequest="50" VerticalOptions="Center" Aspect="Fill" />
+                                <Label Text="{Binding News.Title}" FontAttributes="Bold" FontSize="Small" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center" VerticalOptions="Center" LineBreakMode="WordWrap"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </controls:CustomListView>
+        </StackLayout>
+
+        <ContentView BackgroundColor="Black" Opacity="0.5" IsVisible="{Binding IsBusy}" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" />
+        <ActivityIndicator  Color="White"  IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" WidthRequest="80" AbsoluteLayout.LayoutBounds="0.5, 0.5, -1, -1" AbsoluteLayout.LayoutFlags="PositionProportional" />
+    </AbsoluteLayout>
+</ContentPage>

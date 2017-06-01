@@ -7,11 +7,11 @@ namespace NewsCentralizer.View
 {
 
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class TopNewsView
+    public partial class FavoriteView
     {
-        private TopNewsViewModel ViewModel => BindingContext as TopNewsViewModel;
+        private FavoriteViewModel ViewModel => BindingContext as FavoriteViewModel;
 
-        public TopNewsView()
+        public FavoriteView()
         {
             try
             {
@@ -21,10 +21,7 @@ namespace NewsCentralizer.View
                 toolBarItem.SetBinding(MenuItem.IconProperty, new Binding("UserInfo.ImageUri", BindingMode.OneWay));
                 toolBarItem.SetBinding(MenuItem.TextProperty, new Binding("UserInfo.Name", BindingMode.OneWay));
                 ToolbarItems.Add(toolBarItem);
-
-                var toolBarItem2 = new ToolbarItem("Favoritos", "favorite_settings.png", () => { ViewModel?.FavoriteCommand?.Execute(null); }, ToolbarItemOrder.Primary);
-                ToolbarItems.Add(toolBarItem2);
-
+                
                 ViewModel.IsBusy = false;
             }
             catch (Exception ex)

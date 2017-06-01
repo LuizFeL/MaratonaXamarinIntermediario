@@ -43,7 +43,7 @@ namespace NewsCentralizer.Services
             {
                 MobileServiceAuthenticationToken = Settings.AuthToken
             };
-            Task.Run(() => SetUserAvatar((MobileServiceAuthenticationProvider)Settings.LoginProvider));
+            Task.Run(() => SetUserAvatar((MobileServiceAuthenticationProvider)int.Parse(Settings.LoginProvider)));
             return true;
         }
 
@@ -55,7 +55,7 @@ namespace NewsCentralizer.Services
 
             Settings.AuthToken = user?.MobileServiceAuthenticationToken;
             Settings.UserId = user?.UserId;
-            Settings.LoginProvider = (int)model.Provider;
+            Settings.LoginProvider = ((int)model.Provider).ToString();
             await SetUserAvatar(model.Provider);
 
             return Settings.IsLoggedIn;
@@ -82,7 +82,7 @@ namespace NewsCentralizer.Services
             }
         }
 
-        public async Task<IEnumerable<T>> GetAll<T>() where T : IKeyObject, new()
+        public async Task<IEnumerable<T>> GetAll<T>() where T : BaseModel, new()
         {
             var empty = new T[0];
             try
@@ -99,21 +99,12 @@ namespace NewsCentralizer.Services
             }
         }
 
-        public async Task<T> Get<T>(string key) where T : IKeyObject, new()
+        public async Task<T> Get<T>(string key) where T : BaseModel, new()
         {
-            try
-            {
-                var table = Client.GetSyncTable<T>();
-                var queryResult = await table.Where(x => x.Id == key).ToListAsync();
-                return queryResult.FirstOrDefault();
-            }
-            catch (Exception)
-            {
-                return new T();
-            }
+            return await Get<T>(x => x.Id == key);           
         }
 
-        public async Task<T> Get<T>(Expression<Func<T, bool>> where) where T : IKeyObject, new()
+        public async Task<T> Get<T>(Expression<Func<T, bool>> where) where T : BaseModel, new()
         {
             try
             {
@@ -123,15 +114,32 @@ namespace NewsCentralizer.Services
             }
             catch (Exception)
             {
-                return new T();
+                return null;
             }
         }
 
-        public async void Save<T>(T data) where T : IKeyObject, new()
+        public async Task<List<T>> GetList<T>(Expression<Func<T, bool>> where) where T : BaseModel, new()
+        {
+            try
+            {
+                var table = Client.GetSyncTable<T>();
+                var queryResult = await table.Where(where).ToListAsync();
+                return queryResult.ToList();
+            }
+            catch (Exception)
+            {
+                return new List<T>();
+            }
+        }
+
+        public async void Save<T>(T data) where T : BaseModel, new()
         {
             var table = Client.GetSyncTable<T>();
 
-            if (await Get<T>(data.Id) == null)
+            var existingData = await Get<T>(data.Id);
+            var exists = !string.IsNullOrWhiteSpace(existingData?.Id);
+
+            if (!exists)
             {
                 await table.InsertAsync(data);
                 return;
@@ -140,7 +148,7 @@ namespace NewsCentralizer.Services
             await table.UpdateAsync(data);
         }
 
-        public async Task SyncAsync<T>() where T : IKeyObject, new()
+        public async Task SyncAsync<T>() where T : BaseModel, new()
         {
             try
             {
@@ -154,13 +162,13 @@ namespace NewsCentralizer.Services
             }
         }
 
-        public async Task CleanData<T>() where T : IKeyObject, new()
+        public async Task CleanData<T>() where T : BaseModel, new()
         {
             var table = Client.GetSyncTable<T>();
             await table.PurgeAsync(GetName<T>(), table.CreateQuery(), new System.Threading.CancellationToken());
         }
 
-        public async void Delete<T>(T data) where T : IKeyObject, new()
+        public async Task Delete<T>(T data) where T : BaseModel, new()
         {
             var table = Client.GetSyncTable<T>();
             if (await Get<T>(data.Id) == null) return;

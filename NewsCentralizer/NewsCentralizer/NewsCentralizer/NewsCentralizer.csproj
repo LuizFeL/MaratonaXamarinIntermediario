@@ -41,6 +41,7 @@
     <Compile Include="Authentication\IAuthentication.cs" />
     <Compile Include="Controls\CustomListView.cs" />
     <Compile Include="Helpers\Settings.cs" />
+    <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\CategoryModel.cs" />
     <Compile Include="Model\FavoriteModel.cs" />
     <Compile Include="Model\IKeyObject.cs" />
@@ -51,7 +52,9 @@
     <Compile Include="Model\UserInfoModel.cs" />
     <Compile Include="Services\AzureClient.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
+    <Compile Include="ViewModel\ListZebraColorConverter.cs" />
     <Compile Include="ViewModel\NewsViewModel.cs" />
+    <Compile Include="ViewModel\FavoriteViewModel.cs" />
     <Compile Include="ViewModel\TopNewsViewModel.cs" />
     <Compile Include="ViewModel\SocialLoginViewModel.cs" />
     <Compile Include="View\SocialLoginView.xaml.cs">
@@ -60,6 +63,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\NewsView.xaml.cs">
       <DependentUpon>NewsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\FavoriteView.xaml.cs">
+      <DependentUpon>FavoriteView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\TopNewsView.xaml.cs">
       <DependentUpon>TopNewsView.xaml</DependentUpon>
@@ -157,6 +163,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="View\NewsView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="View\FavoriteView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

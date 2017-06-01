@@ -1,5 +1,4 @@
-﻿using Microsoft.WindowsAzure.MobileServices;
-using Plugin.Settings;
+﻿using Plugin.Settings;
 using Plugin.Settings.Abstractions;
 
 namespace NewsCentralizer.Helpers
@@ -15,7 +14,7 @@ namespace NewsCentralizer.Helpers
         private static readonly string AuthTokenDefault = string.Empty;
 
         private const string LoginProviderKey = "loginprovider_key";
-        private const int LoginProviderDefault = (int)MobileServiceAuthenticationProvider.MicrosoftAccount;
+        private const string LoginProviderDefault = "0";
 
 
         public static string AuthToken
@@ -24,7 +23,7 @@ namespace NewsCentralizer.Helpers
             set { AppSettings.AddOrUpdateValue(AuthTokenKey, value); }
         }
 
-        public static int LoginProvider
+        public static string LoginProvider
         {
             get { return AppSettings.GetValueOrDefault(LoginProviderKey, LoginProviderDefault); }
             set { AppSettings.AddOrUpdateValue(AuthTokenKey, value); }

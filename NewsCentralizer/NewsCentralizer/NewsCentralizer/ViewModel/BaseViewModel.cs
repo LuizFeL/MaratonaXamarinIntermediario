@@ -14,7 +14,7 @@ namespace NewsCentralizer.ViewModel
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public BaseViewModel()
+        protected BaseViewModel()
         {
 
             LogoutCommand = new Command(ExecuteLogoutCommand);
@@ -112,12 +112,12 @@ namespace NewsCentralizer.ViewModel
 
         public async Task PushAsync<TViewModel>(params object[] args) where TViewModel : BaseViewModel
         {
-            await Application.Current.MainPage.Navigation.PushAsync(GetPage<TViewModel>());
+            await Application.Current.MainPage.Navigation.PushAsync(GetPage<TViewModel>(args));
         }
 
         public async Task PushModalAsync<TViewModel>(params object[] args) where TViewModel : BaseViewModel
         {
-            await Application.Current.MainPage.Navigation.PushModalAsync(GetPage<TViewModel>());
+            await Application.Current.MainPage.Navigation.PushModalAsync(GetPage<TViewModel>(args));
         }
 
         public async Task LogoutNavigationAsync(params object[] args)

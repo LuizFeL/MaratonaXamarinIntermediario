@@ -26,7 +26,7 @@ namespace NewsCentralizer.ViewModel
         public string FavoriteIcon => IsFavorite ? "favorite.png" : "nofavorite.png";
 
         public NewsViewModel(AzureClient client, NewsModel news)
-        {
+        {            
             IsFavorite = false;
             _client = client;
             News = news;
@@ -53,6 +53,7 @@ namespace NewsCentralizer.ViewModel
                 IsBusy = true;
                 await Task.Delay(100).ConfigureAwait(true);
 
+                _client.Save(News);
                 _favorite = new FavoriteModel
                 {
                     NewsId = News.Id,
