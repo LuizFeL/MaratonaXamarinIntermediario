@@ -18,13 +18,34 @@ namespace NewsCentralizer.ViewModel
         public FavoriteViewModel(AzureClient client)
         {
             _client = client;
-            Title = "Meus Favoritos";
 
             GoToNewsCommand = new Command<string>(ExecuteGoToNewsCommand);
             LoadFavoritesCommand = new Command(ExecuteLoadFavoritesCommand);
             DeleteFavoriteCommand = new Command<string>(ExecuteDeleteFavoriteCommand);
+            PreferencesCommand = new Command(ExecutePreferencesCommand);
 
             Task.Run(() => LoadAsync());
+        }
+        
+        public Command PreferencesCommand { get; }
+
+        private async void ExecutePreferencesCommand()
+        {
+            if (!Settings.IsLoggedIn) return;
+            try
+            {
+                IsBusy = true;
+                await Task.Delay(100).ConfigureAwait(true);
+                await PushAsync<PreferencesViewModel>();
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", ex.Message, "OK");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         public Command<string> DeleteFavoriteCommand { get; }
@@ -36,13 +57,13 @@ namespace NewsCentralizer.ViewModel
             try
             {
                 IsBusy = true;
+                await Task.Delay(100).ConfigureAwait(true);
                 var favorite = await _client.Get<FavoriteModel>(favoriteId);
                 if (string.IsNullOrWhiteSpace(favorite?.Id))
                 {
                     await DisplayAlert("Erro", "Noticia não encontrada", "OK");
                     return;
                 }
-                await Task.Delay(100).ConfigureAwait(true);
                 await _client.Delete(favorite);
                 await LoadAsync();
             }
@@ -61,7 +82,7 @@ namespace NewsCentralizer.ViewModel
             try
             {
                 IsBusy = true;
-                //await Task.Delay(100).ConfigureAwait(true);
+                await Task.Delay(100).ConfigureAwait(true);
                 var favorites = (await _client.GetList<FavoriteModel>(x=>x.UserId == Settings.UserId)).ToArray();
                 var ix = 0;
                 foreach (var favorite in favorites)

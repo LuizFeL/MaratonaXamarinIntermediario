@@ -7,24 +7,24 @@ namespace NewsCentralizer.View
 {
 
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class FavoriteView
+    public partial class PreferencesView
     {
-        private FavoriteViewModel ViewModel => BindingContext as FavoriteViewModel;
+        private PreferencesViewModel ViewModel => BindingContext as PreferencesViewModel;
 
-        public FavoriteView()
+        public PreferencesView()
         {
             try
             {
                 InitializeComponent();
 
-                BindingContext = BindingContext ?? new TopNewsViewModel(App.AzureClient);
+                BindingContext = BindingContext ?? new PreferencesViewModel(App.AzureClient);
 
                 var toolBarItem = new ToolbarItem("Fazer Login", "", () => { ViewModel?.LogoutCommand?.Execute(null); }, ToolbarItemOrder.Primary);
                 toolBarItem.SetBinding(MenuItem.IconProperty, new Binding("UserInfo.ImageUri", BindingMode.OneWay));
                 toolBarItem.SetBinding(MenuItem.TextProperty, new Binding("UserInfo.Name", BindingMode.OneWay));
                 ToolbarItems.Add(toolBarItem);
 
-                ToolbarItems.Add(new ToolbarItem("Preferências", "preferences.png", () => { ViewModel?.PreferencesCommand?.Execute(null); }, ToolbarItemOrder.Primary));                
+                ToolbarItems.Add(new ToolbarItem("Favoritos", "favorite_settings.png", () => { ViewModel?.FavoriteCommand?.Execute(null); }, ToolbarItemOrder.Primary));
             }
             catch (Exception ex)
             {

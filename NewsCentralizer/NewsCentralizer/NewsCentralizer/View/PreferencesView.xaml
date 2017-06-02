@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NewsCentralizer.View.PreferencesView"
+             Title="Preferências"
+             xmlns:viewModel="clr-namespace:NewsCentralizer.ViewModel;assembly=NewsCentralizer"
+             xmlns:controls="clr-namespace:NewsCentralizer.Controls;assembly=NewsCentralizer"
+             x:Name="PreferenceListPage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <viewModel:ListZebraColorConverter  x:Key="MyColorConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <AbsoluteLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" >
+        <Image HorizontalOptions="Fill" VerticalOptions="Fill" Source="background.jpg" Aspect="AspectFill" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All" />
+
+        <StackLayout Padding="15" Spacing="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Spacing="5" Padding="5" Margin="0">
+                <Picker ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" Title="Escolha uma categoria" />
+                <Button Text="Add" BackgroundColor="SeaGreen" TextColor="White" Command="{Binding SaveCommand}" />
+            </StackLayout>
+
+            <Entry Text="{Binding SelectedTags}" Placeholder="Informe as TAGs desejadas" HorizontalOptions="FillAndExpand" />
+
+            <controls:CustomListView x:Name="PreferencesListView" ItemsSource="{Binding Preferences}" HasUnevenRows="True" SeparatorVisibility="None" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                <ListView.ItemTemplate >
+                    <DataTemplate >
+                        <ViewCell>
+                            <Grid  HorizontalOptions="FillAndExpand" BackgroundColor="{Binding Index, Converter={StaticResource MyColorConverter}}" Padding="5" Margin="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="90" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"  />
+                                    <RowDefinition Height="Auto"  />
+                                </Grid.RowDefinitions>
+                                <Button Text="Excluir" WidthRequest="80" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" VerticalOptions="Center" Command="{Binding Path=BindingContext. DeleteCommand, Source={x:Reference Name=PreferenceListPage}}" CommandParameter="{Binding Id}" BackgroundColor="Brown" TextColor="White" FontSize="Micro" />
+                                <Label Text="Categoria: " Grid.Column="1" Grid.Row="0" FontAttributes="Bold" FontSize="Micro" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center" VerticalOptions="Center" LineBreakMode="WordWrap"/>
+                                <Label Text="TAGs:" Grid.Column="1" Grid.Row="1" FontAttributes="Bold" FontSize="Micro" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center" VerticalOptions="Center" LineBreakMode="WordWrap"/>
+                                <Label Text="{Binding Category.Name}" Grid.Column="2" Grid.Row="0" FontSize="Micro" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center" VerticalOptions="Center" LineBreakMode="WordWrap"/>
+                                <Label Text="{Binding Tag}" Grid.Column="2" Grid.Row="1" FontSize="Micro" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center" VerticalOptions="Center" LineBreakMode="WordWrap"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </controls:CustomListView>
+        </StackLayout>
+
+        <ContentView BackgroundColor="Black" Opacity="0.5" IsVisible="{Binding IsBusy}" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" />
+        <ActivityIndicator  Color="White"  IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" WidthRequest="80" AbsoluteLayout.LayoutBounds="0.5, 0.5, -1, -1" AbsoluteLayout.LayoutFlags="PositionProportional" />
+    </AbsoluteLayout>
+</ContentPage>

@@ -16,7 +16,7 @@
         <Image HorizontalOptions="Fill" VerticalOptions="Fill" Source="background.jpg" Aspect="AspectFill" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All" />
 
         <StackLayout Padding="15" Spacing="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
-            <controls:CustomListView ItemsSource="{Binding TopNews}" ItemTappedCommand="{Binding GoToNewsCommand}" RefreshCommand="{Binding LoadNewsCommand}" HasUnevenRows="True" SeparatorVisibility="None" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+            <controls:CustomListView ItemsSource="{Binding TopNews}" ItemTappedCommand="{Binding GoToNewsCommand}" RefreshCommand="{Binding LoadNewsCommand}" HasUnevenRows="True" SeparatorVisibility="None" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsBusy}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

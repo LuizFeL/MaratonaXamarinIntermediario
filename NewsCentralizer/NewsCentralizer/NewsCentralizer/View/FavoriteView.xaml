@@ -17,7 +17,7 @@
         <Image HorizontalOptions="Fill" VerticalOptions="Fill" Source="background.jpg" Aspect="AspectFill" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All" />
 
         <StackLayout Padding="15" Spacing="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
-            <controls:CustomListView x:Name="FavoritesListView" ItemsSource="{Binding Favorites}" RefreshCommand="{Binding LoadFavoritesCommand}" HasUnevenRows="True" SeparatorVisibility="None" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsBusy}">
+            <controls:CustomListView x:Name="FavoritesListView" ItemsSource="{Binding Favorites}" HasUnevenRows="True" SeparatorVisibility="None" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <ListView.ItemTemplate >
                     <DataTemplate >
                         <ViewCell>

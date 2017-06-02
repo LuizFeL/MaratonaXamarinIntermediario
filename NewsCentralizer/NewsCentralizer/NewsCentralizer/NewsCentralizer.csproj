@@ -52,11 +52,15 @@
     <Compile Include="Model\UserInfoModel.cs" />
     <Compile Include="Services\AzureClient.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
+    <Compile Include="ViewModel\PreferencesViewModel.cs" />
     <Compile Include="ViewModel\ListZebraColorConverter.cs" />
     <Compile Include="ViewModel\NewsViewModel.cs" />
     <Compile Include="ViewModel\FavoriteViewModel.cs" />
     <Compile Include="ViewModel\TopNewsViewModel.cs" />
     <Compile Include="ViewModel\SocialLoginViewModel.cs" />
+    <Compile Include="View\PreferencesView.xaml.cs">
+      <DependentUpon>PreferencesView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SocialLoginView.xaml.cs">
       <DependentUpon>SocialLoginView.xaml</DependentUpon>
     </Compile>
@@ -169,6 +173,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="View\FavoriteView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="View\PreferencesView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

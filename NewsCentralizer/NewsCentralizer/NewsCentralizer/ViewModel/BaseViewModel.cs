@@ -56,6 +56,9 @@ namespace NewsCentralizer.ViewModel
             set { SetProperty(ref _title, value); }
         }
 
+        public bool IsWorking { get; set; }
+
+
         private bool _isBusy;
         public bool IsBusy
         {

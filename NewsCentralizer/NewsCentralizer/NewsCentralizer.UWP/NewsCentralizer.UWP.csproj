@@ -151,6 +151,7 @@
     <Content Include="twitter.png" />
     <Content Include="usericon.png" />
     <Content Include="favorite_settings.png" />
+    <Content Include="preferences.png" />
     <Content Include="windows.png" />
   </ItemGroup>
   <ItemGroup>

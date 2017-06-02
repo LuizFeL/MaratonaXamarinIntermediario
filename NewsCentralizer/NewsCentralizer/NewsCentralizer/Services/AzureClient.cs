@@ -101,7 +101,7 @@ namespace NewsCentralizer.Services
 
         public async Task<T> Get<T>(string key) where T : BaseModel, new()
         {
-            return await Get<T>(x => x.Id == key);           
+            return await Get<T>(x => x.Id == key);
         }
 
         public async Task<T> Get<T>(Expression<Func<T, bool>> where) where T : BaseModel, new()
@@ -132,7 +132,7 @@ namespace NewsCentralizer.Services
             }
         }
 
-        public async void Save<T>(T data) where T : BaseModel, new()
+        public async Task Save<T>(T data) where T : BaseModel, new()
         {
             var table = Client.GetSyncTable<T>();
 
@@ -208,6 +208,57 @@ namespace NewsCentralizer.Services
             };
 
             return topNews;
+        }
+
+        public async Task<List<CategoryModel>> GetCategoriesAsync()
+        {
+            /*var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            var response = await httpClient.GetAsync($"{BaseUrl}News").ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                using (var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
+                {
+                    return JsonConvert.DeserializeObject<List<NewsModel>>(
+                        await new StreamReader(responseStream)
+                            .ReadToEndAsync().ConfigureAwait(false));
+                }
+            }
+
+            return null;*/
+
+            //TODO: Build and get API for categories
+
+            await Task.Delay(15);
+
+            var categories = new List<CategoryModel>
+            {
+                new CategoryModel {Id = "0",Name = "Politica"},
+                new CategoryModel {Id = "1",Name = "Esportes"},
+                new CategoryModel {Id = "2",Name = "Destaques"},
+                new CategoryModel {Id = "3",Name = "Clima"},
+                new CategoryModel {Id = "4",Name = "Sociedade"},
+                new CategoryModel {Id = "5",Name = "Saúde"},
+                new CategoryModel {Id = "6",Name = "Arte"},
+                new CategoryModel {Id = "7",Name = "Cultura"},
+                new CategoryModel {Id = "8",Name = "Entreterimento"},
+                new CategoryModel {Id = "9",Name = "Ciência e Tecnologia"},
+                new CategoryModel {Id = "10",Name = "Desastres e Acidentes"},
+                new CategoryModel {Id = "11",Name = "Ecologia e Meio ambiente"},
+                new CategoryModel {Id = "12",Name = "Economia e Negócios"},
+                new CategoryModel {Id = "13",Name = "Judicial"},
+                new CategoryModel {Id = "14",Name = "Obituário"},
+                new CategoryModel {Id = "15",Name = "Educação"},
+                new CategoryModel {Id = "16",Name = "Trabalho"},
+                new CategoryModel {Id = "17",Name = "Comportamento"},
+                new CategoryModel {Id = "18",Name = "Religião"},
+                new CategoryModel {Id = "19",Name = "História"},
+                new CategoryModel {Id = "20",Name = "Variados"}
+            };
+
+            return categories;
         }
 
     }

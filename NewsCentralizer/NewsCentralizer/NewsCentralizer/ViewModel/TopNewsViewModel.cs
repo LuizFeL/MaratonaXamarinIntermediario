@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Threading.Tasks;
+using NewsCentralizer.Helpers;
 using NewsCentralizer.Model;
 using Xamarin.Forms;
 using NewsCentralizer.Services;
@@ -22,8 +23,32 @@ namespace NewsCentralizer.ViewModel
             GoToNewsCommand = new Command<NewsModel>(ExecuteGoToNewsCommand);
             LoadNewsCommand = new Command(ExecuteLoadNewsCommand);
             FavoriteCommand = new Command(ExecuteFavoriteCommand);
+            PreferencesCommand = new Command(ExecutePreferencesCommand);
 
             Task.Run(() => LoadAsync());
+        }
+
+        public Command PreferencesCommand { get; }
+
+        private async void ExecutePreferencesCommand()
+        {
+            if (!Settings.IsLoggedIn) return;
+            try
+            {
+                IsBusy = true;
+                IsWorking = true;
+                await Task.Delay(100).ConfigureAwait(true);
+                await PushAsync<PreferencesViewModel>();
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", ex.Message, "OK");
+            }
+            finally
+            {
+                IsBusy = false;
+                IsWorking = false;
+            }
         }
 
         public override async Task LoadAsync()
@@ -31,6 +56,7 @@ namespace NewsCentralizer.ViewModel
             try
             {
                 IsBusy = true;
+                IsWorking = true;
                 await Task.Delay(100).ConfigureAwait(true);
                 var news = await _client.GetTopNewsAsync();
                 TopNews = new ObservableCollection<NewsModel>(news);
@@ -43,6 +69,7 @@ namespace NewsCentralizer.ViewModel
             finally
             {
                 IsBusy = false;
+                IsWorking = false;
             }
         }
 
@@ -69,6 +96,7 @@ namespace NewsCentralizer.ViewModel
             try
             {
                 IsBusy = true;
+                IsWorking = true;
                 await Task.Delay(100).ConfigureAwait(true);
                 await PushAsync<NewsViewModel>(news);
             }
@@ -79,6 +107,7 @@ namespace NewsCentralizer.ViewModel
             finally
             {
                 IsBusy = false;
+                IsWorking = false;
             }
         }
 
@@ -86,9 +115,11 @@ namespace NewsCentralizer.ViewModel
 
         private async void ExecuteFavoriteCommand()
         {
+            if (!Settings.IsLoggedIn) return;
             try
             {
                 IsBusy = true;
+                IsWorking = true;
                 await Task.Delay(100).ConfigureAwait(true);
                 await PushAsync<FavoriteViewModel>();
             }
@@ -99,6 +130,7 @@ namespace NewsCentralizer.ViewModel
             finally
             {
                 IsBusy = false;
+                IsWorking = false;
             }
         }
 
