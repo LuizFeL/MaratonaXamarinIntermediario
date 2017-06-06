@@ -37,4 +37,9 @@ namespace NewsCentralizer.Helpers
 
         public static bool IsLoggedIn => !string.IsNullOrWhiteSpace(UserId);
     }
+
+    public static class Constants
+    {
+        public const string AppUrl = "https://maratonaxamarinfel.azurewebsites.net/";
+    }
 }

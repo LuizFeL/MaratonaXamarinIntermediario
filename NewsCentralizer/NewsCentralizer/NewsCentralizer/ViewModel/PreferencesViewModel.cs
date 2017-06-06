@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,7 +27,7 @@ namespace NewsCentralizer.ViewModel
             FavoriteCommand = new Command(ExecuteFavoriteCommand);
             SaveCommand = new Command(ExecuteSaveCommand);
 
-            Task.Run(() => LoadAsync());
+            LoadPreferencesAsync().ConfigureAwait(false);
         }
 
         public Command SaveCommand { get; }
@@ -45,7 +44,7 @@ namespace NewsCentralizer.ViewModel
 
                 var confirm = await DisplayAlert("Atenção", "Deseja adicionar a preferência?", "Sim", "Não");
                 if (!confirm) return;
-                
+
                 IsBusy = true;
                 await Task.Delay(100).ConfigureAwait(true);
 
@@ -59,7 +58,7 @@ namespace NewsCentralizer.ViewModel
                 await _client.Save(preference);
                 SelectedCategory = null;
                 SelectedTags = null;
-                await LoadAsync();
+                await LoadPreferencesAsync();
             }
             catch (Exception ex)
             {
@@ -88,7 +87,7 @@ namespace NewsCentralizer.ViewModel
                     return;
                 }
                 await _client.Delete(preference);
-                await LoadAsync();
+                await LoadPreferencesAsync();
             }
             catch (Exception ex)
             {
@@ -100,13 +99,10 @@ namespace NewsCentralizer.ViewModel
             }
         }
 
-        public override async Task LoadAsync()
+        public async Task LoadPreferencesAsync()
         {
             try
             {
-                IsBusy = true;
-                await Task.Delay(100).ConfigureAwait(true);
-
                 Categories = new ObservableCollection<CategoryModel>((await _client.GetCategoriesAsync()).OrderBy(x => x.Name));
                 var preferences = (await _client.GetList<PreferenceModel>(x => x.UserId == Settings.UserId)).ToArray();
 
@@ -118,14 +114,10 @@ namespace NewsCentralizer.ViewModel
                 }
                 Preferences = new ObservableCollection<PreferenceModel>(preferences);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Preferences = new ObservableCollection<PreferenceModel>();
-                await DisplayAlert("Erro ao buscar preferências", ex.Message, "OK");
-            }
-            finally
-            {
-                IsBusy = false;
+                throw;
             }
         }
 
@@ -159,7 +151,20 @@ namespace NewsCentralizer.ViewModel
 
         private async void ExecuteLoadCommand()
         {
-            await LoadAsync();
+            try
+            {
+                IsBusy = true;
+                await Task.Delay(100).ConfigureAwait(true);
+                await LoadPreferencesAsync();
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro ao buscar preferências", ex.Message, "OK");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         public Command FavoriteCommand { get; }

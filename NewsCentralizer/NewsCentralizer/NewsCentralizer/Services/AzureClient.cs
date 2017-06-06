@@ -17,11 +17,10 @@ namespace NewsCentralizer.Services
         protected readonly MobileServiceClient Client;
         protected MobileServiceSQLiteStore Store;
         const string DbPath = "data.db";
-        private const string ServiceUri = "https://maratonaxamarinfel.azurewebsites.net/";
 
         public AzureClient()
         {
-            Client = new MobileServiceClient(ServiceUri);
+            Client = new MobileServiceClient(Constants.AppUrl);
             Store = new MobileServiceSQLiteStore(DbPath);
             Store.DefineTable<CategoryModel>();
             Store.DefineTable<FavoriteModel>();

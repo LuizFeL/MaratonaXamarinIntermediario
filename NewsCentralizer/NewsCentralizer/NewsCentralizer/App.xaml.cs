@@ -11,6 +11,7 @@ namespace NewsCentralizer
     {
         public static UserInfoModel UserInfo { get; set; }
         public static AzureClient AzureClient { get; private set; }
+        public static NewsModel NewsNotification { get; set; }
 
         public App()
         {
@@ -18,14 +19,20 @@ namespace NewsCentralizer
             {
                 InitializeComponent();
                 AzureClient = new AzureClient();
-                var page = AzureClient.TryLogin() ? (Page)new TopNewsView() : new SocialLoginView(AzureClient);
-
-                MainPage = new NavigationPage(page);
+                SetMainPage();
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
             }
+        }
+
+        public static void SetMainPage()
+        {
+            var page = NewsNotification != null
+                      ? new NewsView(NewsNotification)
+                      : AzureClient.TryLogin() ? (Page)new TopNewsView() : new SocialLoginView(AzureClient);
+            App.Current.MainPage = new NavigationPage(page);
         }
 
         protected override void OnStart()

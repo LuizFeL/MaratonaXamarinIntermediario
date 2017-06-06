@@ -53,7 +53,13 @@ namespace NewsCentralizer.ViewModel
                 IsBusy = true;
                 await Task.Delay(100).ConfigureAwait(true);
 
-                _client.Save(News);
+                if (!Settings.IsLoggedIn)
+                {
+                    await PushAsync<SocialLoginViewModel>();
+                    return;
+                }
+
+                await _client.Save(News);
                 _favorite = new FavoriteModel
                 {
                     NewsId = News.Id,
@@ -61,7 +67,7 @@ namespace NewsCentralizer.ViewModel
                     News = News,
                     Id = Guid.NewGuid().ToString()
                 };
-                _client.Save(_favorite);
+                await _client.Save(_favorite);
                 IsFavorite = true;
             }
             catch (Exception ex)

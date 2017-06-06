@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="FeLI.NewsCentralizer.Droid" android:installLocation="auto" android:versionCode="1" android:versionName="1.0.0">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="fel.NewsCentralizer.Droid" android:installLocation="auto" android:versionCode="1" android:versionName="1.0.0">
 	<uses-sdk android:minSdkVersion="15" />
 	<application android:label="FeL - News Centralizer " android:icon="@drawable/icon"></application>
 </manifest>
