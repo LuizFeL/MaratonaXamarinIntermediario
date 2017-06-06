@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsCentralizer.API", "NewsCentralizer\NewsCentralizer.API\NewsCentralizer.API.csproj", "{0288B4D9-8345-4C2D-9945-E89BB5611F12}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0288B4D9-8345-4C2D-9945-E89BB5611F12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0288B4D9-8345-4C2D-9945-E89BB5611F12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0288B4D9-8345-4C2D-9945-E89BB5611F12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0288B4D9-8345-4C2D-9945-E89BB5611F12}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

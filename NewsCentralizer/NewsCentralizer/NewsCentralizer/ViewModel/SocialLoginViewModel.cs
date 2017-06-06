@@ -19,7 +19,7 @@ namespace NewsCentralizer.ViewModel
         {
             _client = client;
             Title = "Centralizador de notícias";
-            UserInfo = new UserInfoModel { Id = "0", ImageUri = "", Name = "Fazer Login" };
+            UserInfo = new UserInfoModel { Id = "0", Image = "", Name = "Fazer Login" };
             var loginsTypeList = new List<SocialLoginModel>
             {
                 new SocialLoginModel

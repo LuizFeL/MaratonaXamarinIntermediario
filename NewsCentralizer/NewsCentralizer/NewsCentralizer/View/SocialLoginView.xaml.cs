@@ -41,8 +41,6 @@ namespace NewsCentralizer.View
         private void SetInitialObjects()
         {
             var toolBarItem = new ToolbarItem("Fazer Login", "", () => { }, ToolbarItemOrder.Primary);
-            toolBarItem.SetBinding(MenuItem.IconProperty, new Binding("UserInfo.ImageUri", BindingMode.OneWay));
-            toolBarItem.SetBinding(MenuItem.TextProperty, new Binding("UserInfo.Name", BindingMode.OneWay));
             ToolbarItems.Add(toolBarItem);
 
             BindingContext = new SocialLoginViewModel(_client);

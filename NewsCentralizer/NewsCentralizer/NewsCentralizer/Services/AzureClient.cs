@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.MobileServices;
 using Microsoft.WindowsAzure.MobileServices.SQLiteStore;
 using NewsCentralizer.Authentication;
 using NewsCentralizer.Helpers;
 using NewsCentralizer.Model;
+using Newtonsoft.Json;
 using Xamarin.Forms;
 
 namespace NewsCentralizer.Services
@@ -38,11 +42,7 @@ namespace NewsCentralizer.Services
         public bool TryLogin()
         {
             if (string.IsNullOrWhiteSpace(Settings.AuthToken) || string.IsNullOrWhiteSpace(Settings.UserId)) return false;
-            Client.CurrentUser = new MobileServiceUser(Settings.UserId)
-            {
-                MobileServiceAuthenticationToken = Settings.AuthToken
-            };
-            Task.Run(() => SetUserAvatar((MobileServiceAuthenticationProvider)int.Parse(Settings.LoginProvider)));
+            Client.CurrentUser = new MobileServiceUser(Settings.UserId) { MobileServiceAuthenticationToken = Settings.AuthToken };
             return true;
         }
 
@@ -55,7 +55,6 @@ namespace NewsCentralizer.Services
             Settings.AuthToken = user?.MobileServiceAuthenticationToken;
             Settings.UserId = user?.UserId;
             Settings.LoginProvider = ((int)model.Provider).ToString();
-            await SetUserAvatar(model.Provider);
 
             return Settings.IsLoggedIn;
         }
@@ -65,20 +64,7 @@ namespace NewsCentralizer.Services
             await Client.LogoutAsync();
             Settings.AuthToken = null;
             Settings.UserId = null;
-            App.UserInfo = new UserInfoModel { Id = "0", ImageUri = "", Name = "Fazer Login" };
-        }
-
-        private async Task SetUserAvatar(MobileServiceAuthenticationProvider provider)
-        {
-            try
-            {
-                //TODO: Get user info
-                App.UserInfo = new UserInfoModel { Id = "0", ImageUri = "usericon.png", Name = "Logedin with " + provider };
-            }
-            catch (Exception)
-            {
-                App.UserInfo = new UserInfoModel { Id = "0", ImageUri = "", Name = "Fazer Login" };
-            }
+            App.UserInfo = new UserInfoModel { Id = "0", Image = "", Name = "Fazer Login" };
         }
 
         public async Task<IEnumerable<T>> GetAll<T>() where T : BaseModel, new()
@@ -176,89 +162,75 @@ namespace NewsCentralizer.Services
 
         public async Task<List<NewsModel>> GetTopNewsAsync()
         {
-            /*var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            var response = await httpClient.GetAsync($"{BaseUrl}News").ConfigureAwait(false);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                using (var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
+                var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+#if DEBUG
+                var url = "http://localhost:50037/api/TopNews";
+#else
+            var url = Constants.AppUrl + "api/TopNews";
+#endif
+                var response = await httpClient.GetAsync(url).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    return JsonConvert.DeserializeObject<List<NewsModel>>(
-                        await new StreamReader(responseStream)
-                            .ReadToEndAsync().ConfigureAwait(false));
+                    using (var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
+                    {
+                        return JsonConvert.DeserializeObject<List<NewsModel>>(
+                            await new StreamReader(responseStream)
+                                .ReadToEndAsync().ConfigureAwait(false));
+                    }
                 }
+
+                return new List<NewsModel>();
             }
-
-            return null;*/
-
-            //TODO: Build and get API for top news
-
-            await Task.Delay(1500);
-            var topNews = new List<NewsModel>
+            catch (Exception ex)
             {
-                new NewsModel {Id = "0",Index = 0, Title = "Câmara recebe 14º pedido de impeachment de Temer em 15 dias",Url ="http://istoe.com.br/em-duas-semanas-camara-recebe-14-pedidos-de-impeachment-de-temer/", ImageUrl ="https://p2.trrsf.com/image/fget/cf/372/372/20/0/140/140/images.terra.com/2017/05/30/florestanacionaljamanximgreenpeace.jpg"},
-                new NewsModel {Id = "1",Index = 1, Title = "Com crise, ruralistas aceleram votação de projetos polêmicos",Url ="https://www.terra.com.br/noticias/brasil/politica/com-crise-no-governo-ruralistas-aceleram-votacao-de-projetos-polemicos,200ff8e3475dabaaa1976ecd97685144p3m1r13y.html", ImageUrl ="https://p2.trrsf.com/image/fget/cf/372/372/20/0/140/140/images.terra.com/2017/05/30/florestanacionaljamanximgreenpeace.jpg"},
-                new NewsModel {Id = "2",Index = 2, Title = "Rei dos desarmes e bom passador, Jucilei conquista São Paulo",Url ="https://www.terra.com.br/esportes/lance/rei-dos-desarmes-no-time-e-bom-passador-jucilei-conquista-sao-paulo,56af3b37b36dd1c1649f354a98d888268ftdmmtf.html", ImageUrl ="https://p2.trrsf.com/image/fget/cf/140/140/images.terra.com/2017/05/30/jucileisaopaulopalmeirasbrasileirao27052017rubenschirispfc.JPG"},
-                new NewsModel {Id = "3",Index = 3, Title = "Veja os 10 atores que mais arrecadaram em bilheteria no cinema",Url ="http://click.uol.com.br/?rf=homec-chamada-topo-modulo-tt-carros1&pos=mod-1_col-4;topo&u=https://cinema.uol.com.br/noticias/redacao/2017/05/30/bilhoes-e-mais-bilhoes-confira-os-10-astros-mais-valiosos-de-hollywood.htm", ImageUrl ="https://hp.imguol.com.br/c/home/d3/2017/02/05/cartaz-de-capitao-america-2-o-soldado-invernal-mostra-samuel-l-jackson-no-papel-de-nick-fury-1486294455279_200x140.jpg"},
-                new NewsModel {Id = "4",Index = 4, Title = "Primeira vez com Anitta. Vem ver",Url ="http://click.uol.com.br/?rf=homec-chamada-destaque-entretenimento-modulo1-item1&pos=mod-7_col-3;entretenimento&u=https://musica.uol.com.br/noticias/redacao/2017/05/29/quando-foi-o-primeiro-porre-da-anitta.htm", ImageUrl ="https://hp.imguol.com.br/c/home/1f/2017/05/29/anitta-participa-do-quadro-primeira-vez-1496086942921_300x200.jpg"},
-                new NewsModel {Id = "5",Index = 5, Title = "Homem desenterra irmão, carrega o caixão na bicicleta e é detido em MG",Url ="http://click.bol.com.br/?rf=homeb-painel-item1&pos=mod-1;painel&u=https://noticias.bol.uol.com.br/ultimas-noticias/brasil/2017/05/29/homem-desenterra-irmao-carrega-o-caixao-na-bicicleta-e-e-detido-em-minas-gerais.htm", ImageUrl ="https://conteudo.imguol.com.br/c/bol/fotos/calango/73/2017/05/30/homem-desenterra-irmao-carrega-o-caixao-na-bicicleta-e-e-detido-em-mg-1496138436333_v2_693x352.jpg"}
-            };
-
-            return topNews;
+                var displayAlert = Application.Current?.MainPage?.DisplayAlert("Erro ao buscar top news", ex.Message, "OK");
+                if (displayAlert != null) await displayAlert;
+                return new List<NewsModel>();
+            }
         }
 
         public async Task<List<CategoryModel>> GetCategoriesAsync()
         {
-            /*var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            var response = await httpClient.GetAsync($"{BaseUrl}News").ConfigureAwait(false);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                using (var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
+                if (App.Categories != null) return App.Categories;
+                var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+#if DEBUG
+                var url = "http://localhost:50037/api/Category";
+#else
+                var url = Constants.AppUrl + "api/TopNews";
+#endif
+                var response = await httpClient.GetAsync(url).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    return JsonConvert.DeserializeObject<List<NewsModel>>(
-                        await new StreamReader(responseStream)
-                            .ReadToEndAsync().ConfigureAwait(false));
+                    using (var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
+                    {
+
+                        App.Categories = JsonConvert.DeserializeObject<List<CategoryModel>>(
+                            await new StreamReader(responseStream)
+                                .ReadToEndAsync().ConfigureAwait(false));
+                        return App.Categories;
+                    }
                 }
+
+                App.Categories = new List<CategoryModel>();
+                return App.Categories;
             }
-
-            return null;*/
-
-            //TODO: Build and get API for categories
-
-            await Task.Delay(15);
-
-            var categories = new List<CategoryModel>
+            catch (Exception ex)
             {
-                new CategoryModel {Id = "0",Name = "Politica"},
-                new CategoryModel {Id = "1",Name = "Esportes"},
-                new CategoryModel {Id = "2",Name = "Destaques"},
-                new CategoryModel {Id = "3",Name = "Clima"},
-                new CategoryModel {Id = "4",Name = "Sociedade"},
-                new CategoryModel {Id = "5",Name = "Saúde"},
-                new CategoryModel {Id = "6",Name = "Arte"},
-                new CategoryModel {Id = "7",Name = "Cultura"},
-                new CategoryModel {Id = "8",Name = "Entreterimento"},
-                new CategoryModel {Id = "9",Name = "Ciência e Tecnologia"},
-                new CategoryModel {Id = "10",Name = "Desastres e Acidentes"},
-                new CategoryModel {Id = "11",Name = "Ecologia e Meio ambiente"},
-                new CategoryModel {Id = "12",Name = "Economia e Negócios"},
-                new CategoryModel {Id = "13",Name = "Judicial"},
-                new CategoryModel {Id = "14",Name = "Obituário"},
-                new CategoryModel {Id = "15",Name = "Educação"},
-                new CategoryModel {Id = "16",Name = "Trabalho"},
-                new CategoryModel {Id = "17",Name = "Comportamento"},
-                new CategoryModel {Id = "18",Name = "Religião"},
-                new CategoryModel {Id = "19",Name = "História"},
-                new CategoryModel {Id = "20",Name = "Variados"}
-            };
-
-            return categories;
+                App.Categories = new List<CategoryModel>();
+                var displayAlert = Application.Current?.MainPage?.DisplayAlert("Erro ao buscar categorias", ex.Message, "OK");
+                if (displayAlert != null) await displayAlert;
+                return App.Categories;
+            }
         }
-
     }
 }

@@ -19,12 +19,10 @@ namespace NewsCentralizer.View
 
                 BindingContext = BindingContext ?? new TopNewsViewModel(App.AzureClient);
 
-                var toolBarItem = new ToolbarItem("Fazer Login", "", () => { ViewModel?.LogoutCommand?.Execute(null); }, ToolbarItemOrder.Primary);
-                toolBarItem.SetBinding(MenuItem.IconProperty, new Binding("UserInfo.ImageUri", BindingMode.OneWay));
-                toolBarItem.SetBinding(MenuItem.TextProperty, new Binding("UserInfo.Name", BindingMode.OneWay));
+                var toolBarItem = new ToolbarItem("User", "usericon", () => { ViewModel?.LogoutCommand?.Execute(null); }, ToolbarItemOrder.Primary);
                 ToolbarItems.Add(toolBarItem);
 
-                ToolbarItems.Add(new ToolbarItem("Preferências", "preferences.png", () => { ViewModel?.PreferencesCommand?.Execute(null); }, ToolbarItemOrder.Primary));                
+                ToolbarItems.Add(new ToolbarItem("Preferências", "preferences.png", () => { ViewModel?.PreferencesCommand?.Execute(null); }, ToolbarItemOrder.Primary));
             }
             catch (Exception ex)
             {

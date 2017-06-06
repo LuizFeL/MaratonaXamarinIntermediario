@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Microsoft.WindowsAzure.MobileServices.Sync;
 using NewsCentralizer.Helpers;
 using NewsCentralizer.Model;
 using NewsCentralizer.Services;
@@ -12,6 +14,7 @@ namespace NewsCentralizer
         public static UserInfoModel UserInfo { get; set; }
         public static AzureClient AzureClient { get; private set; }
         public static NewsModel NewsNotification { get; set; }
+        public static List<CategoryModel> Categories { get; set; }
 
         public App()
         {
