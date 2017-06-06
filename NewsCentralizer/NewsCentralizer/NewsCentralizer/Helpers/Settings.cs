@@ -16,6 +16,23 @@ namespace NewsCentralizer.Helpers
         private const string LoginProviderKey = "loginprovider_key";
         private const string LoginProviderDefault = "0";
 
+        private const string LastTopNewsKey = "lasttopnews_key";
+        private const string LastTopNewsDefault = "";
+
+        private const string CategoriesKey = "categories_key";
+        private const string CategoriesDefault = "";
+
+        public static string LastTopNews
+        {
+            get { return AppSettings.GetValueOrDefault(LastTopNewsKey, LastTopNewsDefault); }
+            set { AppSettings.AddOrUpdateValue(LastTopNewsKey, value); }
+        }
+
+        public static string Categories
+        {
+            get { return AppSettings.GetValueOrDefault(CategoriesKey, CategoriesDefault); }
+            set { AppSettings.AddOrUpdateValue(CategoriesKey, value); }
+        }
 
         public static string AuthToken
         {

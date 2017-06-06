@@ -160,77 +160,54 @@ namespace NewsCentralizer.Services
             await table.DeleteAsync(data);
         }
 
-        public async Task<List<NewsModel>> GetTopNewsAsync()
+        public async Task<string> GetApiAsync(string url)
         {
             try
             {
                 var httpClient = new HttpClient();
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-#if DEBUG
-                var url = "http://localhost:50037/api/TopNews";
-#else
-            var url = Constants.AppUrl + "api/TopNews";
-#endif
                 var response = await httpClient.GetAsync(url).ConfigureAwait(false);
-
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode) return null;
+                using (var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
                 {
-                    using (var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-                    {
-                        return JsonConvert.DeserializeObject<List<NewsModel>>(
-                            await new StreamReader(responseStream)
-                                .ReadToEndAsync().ConfigureAwait(false));
-                    }
+                    return await new StreamReader(responseStream).ReadToEndAsync().ConfigureAwait(false);
                 }
-
-                return new List<NewsModel>();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                var displayAlert = Application.Current?.MainPage?.DisplayAlert("Erro ao buscar top news", ex.Message, "OK");
-                if (displayAlert != null) await displayAlert;
-                return new List<NewsModel>();
+                return null;
             }
+        }
+
+        public List<T> TryDeserializeList<T>(string sJson) where T : BaseModel, new()
+        {
+            try
+            {
+                return string.IsNullOrWhiteSpace(sJson) ? null : JsonConvert.DeserializeObject<List<T>>(sJson);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<NewsModel>> GetTopNewsAsync()
+        {
+            const string url = Constants.AppUrl + "api/TopNews";
+            var sApiResult = await GetApiAsync(url);
+            Settings.LastTopNews = string.IsNullOrWhiteSpace(sApiResult) ? Settings.LastTopNews : sApiResult;
+            var news = TryDeserializeList<NewsModel>(Settings.LastTopNews) ?? new List<NewsModel>();
+            return news;
         }
 
         public async Task<List<CategoryModel>> GetCategoriesAsync()
         {
-            try
-            {
-                if (App.Categories != null) return App.Categories;
-                var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-#if DEBUG
-                var url = "http://localhost:50037/api/Category";
-#else
-                var url = Constants.AppUrl + "api/TopNews";
-#endif
-                var response = await httpClient.GetAsync(url).ConfigureAwait(false);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    using (var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-                    {
-
-                        App.Categories = JsonConvert.DeserializeObject<List<CategoryModel>>(
-                            await new StreamReader(responseStream)
-                                .ReadToEndAsync().ConfigureAwait(false));
-                        return App.Categories;
-                    }
-                }
-
-                App.Categories = new List<CategoryModel>();
-                return App.Categories;
-            }
-            catch (Exception ex)
-            {
-                App.Categories = new List<CategoryModel>();
-                var displayAlert = Application.Current?.MainPage?.DisplayAlert("Erro ao buscar categorias", ex.Message, "OK");
-                if (displayAlert != null) await displayAlert;
-                return App.Categories;
-            }
+            const string url = Constants.AppUrl + "api/Category";
+            var sApiResult = await GetApiAsync(url);
+            if (!string.IsNullOrWhiteSpace(sApiResult)) Settings.Categories = sApiResult;
+            var categories = TryDeserializeList<CategoryModel>(Settings.Categories);
+            App.Categories = categories ?? App.Categories ?? new List<CategoryModel> { new CategoryModel { Id = "-1", Name = "Geral" } };
+            return App.Categories;
         }
     }
 }
