@@ -1,10 +1,8 @@
 ﻿using System;
 using Android.App;
-using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Gcm.Client;
-using NewsCentralizer.View;
 
 namespace NewsCentralizer.Droid
 {
