@@ -1,6 +1,8 @@
 Images/
 NewsCentralizer/NewsCentralizer/NewsCentralizer/bin/
 NewsCentralizer/NewsCentralizer/NewsCentralizer/obj/
+NewsCentralizer/NewsCentralizer/NewsCentralizer.API/bin/
+NewsCentralizer/NewsCentralizer/NewsCentralizer.API/obj/
 NewsCentralizer/NewsCentralizer/NewsCentralizer.Android/bin/
 NewsCentralizer/NewsCentralizer/NewsCentralizer.Android/obj/
 NewsCentralizer/NewsCentralizer/NewsCentralizer.UWP/obj/
